@@ -1,0 +1,34 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Tests",
+            "command": "./vendor/bin/phpunit",
+            "type": "shell",
+            "args": [
+                "tests",
+                "--filter",
+                "${input:filterClass}",
+                "--verbose"
+            ],
+            "presentation": {
+                "reveal": "always"
+            },
+            "group": "build"
+        },
+        {
+            "label": "Run Server",
+            "type": "shell",
+            "command": "php -S localhost:5500",
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "type": "promptString",
+            "default": "${fileBasenameNoExtension}",
+            "description": "Test Class Name to Run",
+            "id": "filterClass"
+        }
+    ]
+}

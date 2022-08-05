@@ -1,0 +1,51 @@
+{
+    "Abstract Header" : {
+        "prefix" : "ah",
+        "scope" : "php",
+        "description" : "",
+        "body" : [
+            "",
+            "namespace FT\\RequestResponse\\Headers;",
+            "",
+            "final class $TM_FILENAME_BASE extends AbstractHeader",
+            "{",
+            "\tpublic function __construct(string \\$$1) {",
+            "\t\tparent::__construct(\\$$1);",
+            "\t\t$0",
+            "\t}",
+            "",
+            "}"
+        ]
+    },
+    "Abstract Multivalue Header": {
+        "prefix": "amvh",
+        "scope": "php",
+        "description": "MultiValue Header",
+        "body": [
+            "",
+            "namespace FT\\RequestResponse\\Headers;",
+            "",
+            "final class $TM_FILENAME_BASE extends AbstractMultiValueHeader",
+            "{",
+            "\tpublic function __construct(string \\$$1) {",
+            "\t\tparent::__construct(\\$$1);",
+            "\t\t$0",
+            "\t}",
+            "",
+            "}"
+        ]
+    },
+    "test" : {
+        "prefix" : "test",
+        "scope" : "php",
+        "description" : "",
+        "body" : [
+            "/**",
+            "* @test",
+            "*/",
+            "public function $1_test() {",
+            "\t$0",
+            "}"
+        ]
+    }
+}
