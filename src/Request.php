@@ -74,10 +74,15 @@ final class Request implements JsonSerializable
                 $authority .= ":$port";
         }
 
+        $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+        if (empty(trim($path))) $path = "/";
+        if (trim($path[0]) !== '/') $path = "/$path";
+
         $query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
         $query = $query ? "?$query" : "";
 
-        $this->url = new URL($protocol . $authority . $query);
+        $this->url = new URL($protocol . $authority . $path . $query);
     }
 
     private function parseBody()
