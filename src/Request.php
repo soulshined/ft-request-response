@@ -75,6 +75,7 @@ final class Request implements JsonSerializable
         }
 
         $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        if (!is_string($path)) $path = "/";
 
         if (empty(trim($path))) $path = "/";
         if (trim($path[0]) !== '/') $path = "/$path";
