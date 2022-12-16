@@ -121,9 +121,11 @@ final class Request implements JsonSerializable
         foreach ($params as $key => $value)
             $this->parameters->$key = $value;
 
-        foreach (array_keys($GLOBALS["_" . $this->METHOD->name]) as $key) {
-            if (!isset($this->parameters->$key))
-                $this->parameters->$key = $GLOBALS["_" . $this->METHOD->name][$key];
+        if (in_array($this->METHOD->name, ['GET', 'POST'])) {
+            foreach (array_keys($GLOBALS["_" . $this->METHOD->name]) as $key) {
+                if (!isset($this->parameters->$key))
+                    $this->parameters->$key = $GLOBALS["_" . $this->METHOD->name][$key];
+            }
         }
     }
     // endregion INIT
