@@ -7,11 +7,7 @@ final class RequestHeadersTest extends TestCase
 {
 
     private function build_headers(array $headers) : RequestHeaders {
-        $_headers = [];
-        foreach ($headers as $key => $value)
-            $_headers[str_replace("HTTP_", "", str_replace("-", "_", strtoupper($key)))] = $value;
-
-        return new RequestHeaders($_headers);
+        return new RequestHeaders($headers);
     }
 
     /**
@@ -582,6 +578,18 @@ final class RequestHeadersTest extends TestCase
 
         $this->assertTrue($headers->upgrade->has('http/2.0'));
         $this->assertTrue($headers->upgrade->has('irc/6.9'));
+    }
+
+    /**
+    * @test
+    */
+    public function is_header_test() {
+        $headers = $this->build_headers([
+            'UPGRADE' => 'HTTP/2.0, SHTTP/1.3, IRC/6.9, RTA/x11'
+        ]);
+
+        $this->assertNotNull($headers->getByName('http_upgrade'));
+        $this->assertNull($headers->getByName('foobar'));
     }
 
 }

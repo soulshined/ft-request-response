@@ -99,14 +99,14 @@ final class Request implements JsonSerializable
         $headers = [];
 
         foreach ($this->_ as $key => $value) {
-            if (!str_starts_with($key, 'HTTP_')) continue;
+            if (!str_starts_with(strtoupper($key), 'HTTP_')) continue;
 
-            $headers[str_replace("HTTP_", "", strtoupper(str_replace("-", "_", $key)))] = $value;
+            $headers[$key] = $value;
         }
         if (function_exists('apache_request_headers')) {
 
             foreach (apache_request_headers() as $key => $value)
-                $headers[str_replace("HTTP_", "", strtoupper(str_replace("-", "_", $key)))] = $value;
+                $headers[$key] = $value;
         }
 
         $this->headers = new RequestHeaders($headers);
@@ -153,25 +153,21 @@ final class Request implements JsonSerializable
 
     public function isHeaderSet(string $header): bool
     {
-        $header = str_replace("-", "_", strtolower($header));
-        if (str_starts_with($header, 'http_')) $header = substr($header, 4);
-
-        return isset($this->headers->$header);
+        return $this->headers->getByName($header) !== null;
     }
 
     public function isHeaderSetAndNotEmpty(string $header): bool
     {
-        $header = str_replace("-", "_", strtolower($header));
-        if (str_starts_with($header, 'http_')) $header = substr($header, 4);
+        $header = strtolower(RequestHeaders::normalize_name($header));
 
-        if (!isset($this->headers->$header)) return false;
+        if (!isset($this->headers->{$header})) return false;
 
-        $h = $this->headers->$header;
+        $h = $this->headers->{$header};
 
         if ($h instanceof AbstractDateTimeHeader)
             return $h->date !== null;
         else if ($h instanceof AbstractHeader)
-            return strlen(trim(strtolower($h->raw))) > 0;
+            return strlen(trim($h->raw)) > 0;
         else if (
             $h instanceof AbstractMultiValueHeader ||
             $h instanceof AbstractParameterizedHeader ||
@@ -183,7 +179,8 @@ final class Request implements JsonSerializable
         else if ($h instanceof AbstractQualifiedParameterizedHeader)
             return isset($h->directive);
         else if ($h instanceof string)
-            return strlen(trim(strtolower($h))) > 0;
+            return strlen(trim($h)) > 0;
+        else if (is_scalar($h)) return true;
         else false;
     }
 

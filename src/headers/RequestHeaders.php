@@ -143,7 +143,11 @@ final class RequestHeaders implements JsonSerializable
 
     public function __construct(array $headers)
     {
-        // var_dump($headers);
+        $headers = array_combine(
+            array_map(fn ($k) => $this->normalize_name($k), array_keys($headers)),
+            array_values($headers)
+        );
+
         if (key_exists('AUTHORIZATION', $headers)) {
             $this->authorization = new Authorization($headers['AUTHORIZATION']);
             unset($headers['AUTHORIZATION']);
@@ -422,4 +426,18 @@ final class RequestHeaders implements JsonSerializable
         $_ = $this->jsonSerialize();
         return join($delimiter, array_map(fn ($k, $v) => "$k: $v", array_keys($_), array_values($_)));
     }
+
+    public function getByName(string $header) : mixed {
+        $header = strtolower($this->normalize_name($header));
+
+        if (property_exists($this, $header))
+            return $this->{$header};
+
+        return null;
+    }
+
+    public static function normalize_name(string $header) {
+        return str_replace("HTTP_", "", strtoupper(str_replace("-", "_", trim($header))));
+    }
+
 }
