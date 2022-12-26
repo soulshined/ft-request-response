@@ -2,8 +2,8 @@
 
 use FT\RequestResponse\Enums\RequestMethods;
 use FT\RequestResponse\Request;
-use FT\RequestResponse\User\BasicAuthorizationUser;
 use FT\RequestResponse\Tests\LocalServer;
+use FT\RequestResponse\User\BasicAuthorizationUser;
 use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -204,7 +204,13 @@ final class RequestTest extends TestCase  {
     }
 
     private function transform_to_json(ResponseInterface $resp) : array {
-        return json_decode($resp->getBody()->getContents(), true);
+        $contents = $resp->getBody()->getContents();
+        $result = json_decode($contents, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE)
+            $this->fail(json_last_error_msg() . " => " . $contents);
+
+        return $result;
     }
 
     private function transform_to_request(ResponseInterface $resp) : Request {

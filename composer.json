@@ -23,8 +23,12 @@
     },
     "autoload": {
         "psr-4": {
-            "FT\\RequestResponse\\": "src/",
-            "FT\\RequestResponse\\Tests\\": "tests/"
+            "FT\\RequestResponse\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "FT\\RequestResponse\\Tests\\" : "tests/"
         }
     },
     "require-dev": {

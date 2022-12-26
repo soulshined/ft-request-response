@@ -6,7 +6,6 @@ use Creativestyle\AppHttpServerMock\Server;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-
 class LocalServer extends Server
 {
     protected function registerRequestHandlers() {
