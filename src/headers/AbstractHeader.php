@@ -16,4 +16,9 @@ abstract class AbstractHeader
     {
         return strtolower(trim($this->raw));
     }
+
+    public function __toString() {
+        return $this->raw;
+    }
+
 }

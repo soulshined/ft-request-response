@@ -408,10 +408,18 @@ final class RequestHeaders implements JsonSerializable
     public function jsonSerialize(): mixed
     {
         $json = [];
-        foreach (get_object_vars($this) as $prop => $value) {
-            if (isset($this->$prop)) $json[$prop] = $value;
-        }
+        foreach (get_object_vars($this) as $prop => $value)
+            if (isset($value)) {
+                if ($value instanceof AbstractHeader)
+                    $json[$prop] = $value->__toString();
+                else $json[$prop] = $value;
+            }
 
         return $json;
+    }
+
+    public function join(string $delimiter) {
+        $_ = $this->jsonSerialize();
+        return join($delimiter, array_map(fn ($k, $v) => "$k: $v", array_keys($_), array_values($_)));
     }
 }

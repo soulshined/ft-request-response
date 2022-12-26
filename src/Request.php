@@ -68,7 +68,7 @@ final class Request implements JsonSerializable
             $authority = filter_input(INPUT_SERVER, 'HTTP_HOST', FILTER_SANITIZE_URL);
 
         if (!str_contains($authority, "$server_name:")) {
-            $port = $this->_['SERVER_PORT'];
+            $port = $this->_['SERVER_PORT'] ?? "";
 
             if (!empty($port))
                 $authority .= ":$port";
@@ -266,20 +266,13 @@ final class Request implements JsonSerializable
 
     public function __toString()
     {
-        $headers = [];
-
-        foreach (get_object_vars($this->headers) as $var) {
-            if (isset($this->headers->$var))
-                $headers[$var] = $this->headers->$var;
-        }
-
         return sprintf(
             "[%s] %s %s\n%s\nContent: %s",
             (new DateTime(strtotime($this->time)))->format('D M d H:i:s Y'),
             $this->METHOD->name,
             $this->url,
-            join("\n", array_map(fn ($k, $v) => "$k: $v", array_keys($headers), array_values($headers))),
-            $this->body
+            $this->headers->join("\n"),
+            $this->body ?? "<null>"
         );
     }
 
