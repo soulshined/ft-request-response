@@ -82,12 +82,21 @@ class Response {
   contentType(string $mediaType) Response
   statusCode(StatusCodes $code) Response
   statusCodePhrase(string $message) Response
+  status(StatusCodes $code, ?string $message = null) Response
   content(mixed $content) Response
-  redirect(string $url)
-  sendXML(string $xml)
-  sendJson(mixed $json)
-  sendHTML(string $html)
-  sendNoContent()
-  send()
+  redirect(string $url) never
+  redirectIf(string $url, callable $predicate) never
+  sendXML(string $xml) never
+  sendJson(mixed $json) never
+  sendHTML(string $html) never
+  sendNoContent(?string $etag = null) never
+  sendCreated(?string $uri = null) never
+  sendAccepted() never
+  sendNotFound(?string $message = null) never
+  sendUnauthorized() never
+  sendForbidden() never
+  sendBadRequest() never
+  sendInternalServerError() never
+  send() never
 }
 ```
