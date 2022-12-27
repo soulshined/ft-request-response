@@ -4,6 +4,7 @@ namespace FT\RequestResponse;
 
 use FT\RequestResponse\Enums\RequestMethods;
 use FT\RequestResponse\Enums\StatusCodes;
+use FT\RequestResponse\Headers\Authorization;
 use FT\RequestResponse\User\AbstractUser;
 use FT\RequestResponse\User\AnonymousUser;
 use FT\RequestResponse\User\BasicAuthorizationUser;
@@ -34,15 +35,10 @@ final class Utils
         return false;
     }
 
-    public static function get_user_details(): ?AbstractUser
+    public static function get_user_details(?Authorization $authorization): ?AbstractUser
     {
-        if (!key_exists('HTTP_AUTHORIZATION', $_SERVER))
-            return new AnonymousUser;
-
-        $header = htmlspecialchars($_SERVER['HTTP_AUTHORIZATION']);
-
-        if (str_starts_with($header, 'Basic'))
-            return new BasicAuthorizationUser;
+        if ($authorization?->auth_scheme->isBasic())
+            return new BasicAuthorizationUser($authorization);
 
         return new AnonymousUser;
     }

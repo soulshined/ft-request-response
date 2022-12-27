@@ -37,7 +37,6 @@ final class Request implements JsonSerializable
         $this->_ = $_SERVER;
         $this->METHOD = RequestMethods::tryFromName($this->_['REQUEST_METHOD']);
         $this->time = $this->_['REQUEST_TIME_FLOAT'];
-        $this->user = Utils::get_user_details();
         $this->protocol = htmlspecialchars($this->_['SERVER_PROTOCOL']);
 
         $client_ip = null;
@@ -48,6 +47,7 @@ final class Request implements JsonSerializable
 
         $this->ip = $client_ip;
         $this->parseHeaders();
+        $this->user = Utils::get_user_details($this->headers->authorization);
         $this->parseURL();
         $this->parseParameters();
         $this->parseBody();

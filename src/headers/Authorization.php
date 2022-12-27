@@ -2,9 +2,11 @@
 
 namespace FT\RequestResponse\Headers;
 
+use FT\RequestResponse\Enums\AuthorizationSchemeTypes;
+
 final class Authorization extends AbstractHeader
 {
-    public readonly string $auth_scheme;
+    public readonly AuthorizationSchemeTypes $auth_scheme;
     public readonly string $credentials;
 
     public function __construct(string $auth)
@@ -12,7 +14,11 @@ final class Authorization extends AbstractHeader
         parent::__construct($auth);
 
         $split = preg_split("/[ ]/", $auth, 2);
-        $this->auth_scheme = $split[0];
-        $this->credentials = trim($split[1]);
+
+        $scheme = AuthorizationSchemeTypes::tryFromValue(htmlspecialchars($split[0]));
+        if ($scheme === null) $this->auth_scheme = AuthorizationSchemeTypes::UNKNOWN;
+        else $this->auth_scheme = $scheme;
+
+        $this->credentials = htmlspecialchars($split[1]);
     }
 }

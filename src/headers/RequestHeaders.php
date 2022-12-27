@@ -145,7 +145,7 @@ final class RequestHeaders implements JsonSerializable
     {
         $headers = array_combine(
             array_map(fn ($k) => $this->normalize_name($k), array_keys($headers)),
-            array_values($headers)
+            array_map(fn ($v) => trim($v), array_values($headers))
         );
 
         if (key_exists('AUTHORIZATION', $headers)) {

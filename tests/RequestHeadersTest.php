@@ -1,5 +1,6 @@
 <?php
 
+use FT\RequestResponse\Enums\AuthorizationSchemeTypes;
 use FT\RequestResponse\Headers\RequestHeaders;
 use PHPUnit\Framework\TestCase;
 
@@ -18,7 +19,7 @@ final class RequestHeadersTest extends TestCase
             'HTTP_AUTHORIZATION' => 'Basic aoseucnhaoeusncghsaonceuh'
         ]);
         $this->assertNotNull($headers->authorization);
-        $this->assertEquals('Basic', $headers->authorization->auth_scheme);
+        $this->assertEquals(AuthorizationSchemeTypes::BASIC, $headers->authorization->auth_scheme);
         $this->assertEquals('aoseucnhaoeusncghsaonceuh', $headers->authorization->credentials);
     }
 
@@ -30,7 +31,7 @@ final class RequestHeadersTest extends TestCase
             'HTTP_PROXY_AUTHORIZATION' => 'Basic aoseucnhaoeusncghsaonceuh'
         ]);
         $this->assertNotNull($headers->proxy_authorization);
-        $this->assertEquals('Basic', $headers->proxy_authorization->auth_scheme);
+        $this->assertEquals(AuthorizationSchemeTypes::BASIC, $headers->proxy_authorization->auth_scheme);
         $this->assertEquals('aoseucnhaoeusncghsaonceuh', $headers->proxy_authorization->credentials);
     }
 

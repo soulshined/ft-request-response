@@ -2,8 +2,23 @@
 
 namespace FT\RequestResponse\User;
 
+use FT\RequestResponse\Headers\Authorization;
+
 final class BasicAuthorizationUser extends AbstractUser
 {
+    private ?string $username = null;
+    private ?string $password = null;
+
+    public function __construct(public readonly Authorization $authorization)
+    {
+        $split = preg_split('/:/', base64_decode($this->authorization->credentials), 2);
+        if (!empty($split)) {
+            $this->username = $split[0];
+
+            if (count($split) > 1)
+                $this->password = $split[1];
+        }
+    }
 
     public function getUserName(): ?string
     {
@@ -16,14 +31,7 @@ final class BasicAuthorizationUser extends AbstractUser
         if (isset($_SERVER['REDIRECT_REMOTE_USER']))
             return htmlspecialchars($_SERVER['REDIRECT_REMOTE_USER']);
 
-        if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
-            $header = preg_split("/ /", $_SERVER['HTTP_AUTHORIZATION']);
-            if ($header[0] !== 'Basic') return null;
-
-            return preg_split("/:/", base64_decode($header[1]))[0];
-        }
-
-        return null;
+        return $this->username;
     }
 
     public function getPassword(): ?string
@@ -31,14 +39,6 @@ final class BasicAuthorizationUser extends AbstractUser
         if (isset($_SERVER['PHP_AUTH_PW']))
             return htmlspecialchars($_SERVER['PHP_AUTH_PW']);
 
-
-        if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
-            $header = preg_split("/ /", $_SERVER['HTTP_AUTHORIZATION']);
-            if ($header[0] !== 'Basic') return null;
-
-            return preg_split("/:/", base64_decode($header[1]))[1];
-        }
-
-        return null;
+        return $this->password;
     }
 }
