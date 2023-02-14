@@ -2,7 +2,7 @@
     "name": "ft/request-response",
     "description": "A library with common request response utils and helper methods",
     "type": "library",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "license": "MIT",
     "keywords": [
         "request",
